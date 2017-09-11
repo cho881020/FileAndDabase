@@ -2,6 +2,7 @@ package kr.co.tjeit.fileanddabase.util;
 
 import android.content.Context;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,6 +44,32 @@ public class TextFileManager {
             e.printStackTrace();
         }
 
+    }
+
+    public String load() {
+
+        try {
+            FileInputStream fisMemo = mContext.openFileInput(memoFileName);
+
+            byte[] memoData = new byte[fisMemo.available()];
+
+            while (fisMemo.read(memoData) != -1) {
+//                파일이 끝날때까지 계속해서 읽어들임.
+//                read의 결과가 -1이라는건, 파일이 종료되었음을 이야기함.
+            }
+
+            fisMemo.close();
+
+            return new String(memoData);
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 
 }
