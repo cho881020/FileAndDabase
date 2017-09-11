@@ -2,9 +2,11 @@ package kr.co.tjeit.fileanddabase.util;
 
 import android.content.Context;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
@@ -44,4 +46,35 @@ public class ObjectFileManager {
             e.printStackTrace();
         }
     }
+
+    public HashMap<String, String> load() {
+
+        try {
+            FileInputStream fis = mContext.openFileInput(FILE_NAME);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            HashMap<String, String> returnMemoData = null;
+            returnMemoData = (HashMap<String, String>) ois.readObject();
+
+            ois.close();
+            fis.close();
+
+            return returnMemoData;
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void delete() {
+        mContext.deleteFile(FILE_NAME);
+    }
+
 }

@@ -5,7 +5,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import kr.co.tjeit.fileanddabase.util.TxtManager;
+import java.util.HashMap;
+
+import kr.co.tjeit.fileanddabase.util.ObjectFileManager;
 
 // 파일 저장 / 불러오기 / 삭제 기능 구현
 // TxtManager 클래스 활용
@@ -17,7 +19,8 @@ public class MemoActivity extends BaseActivity {
     private android.widget.Button deleteBtn;
     private android.widget.EditText contentEdt;
 
-    TxtManager mTxtManager = new TxtManager(mContext);
+    ObjectFileManager ofm = new ObjectFileManager(mContext);
+    private EditText titleEdt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +36,31 @@ public class MemoActivity extends BaseActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTxtManager.save(contentEdt.getText().toString());
+//                mTxtManager.save(contentEdt.getText().toString());
+
+                HashMap<String, String> memoData = new HashMap<String, String>();
+                memoData.put("title", titleEdt.getText().toString());
+                memoData.put("content", contentEdt.getText().toString());
+
+                ofm.save(memoData);
+
+                titleEdt.setText("");
                 contentEdt.setText("");
+
+
             }
         });
 
         loadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contentEdt.setText(mTxtManager.load());
+//                contentEdt.setText(mTxtManager.load());
+
+                HashMap<String, String> loadMemoData = ofm.load();
+
+                titleEdt.setText(loadMemoData.get("title"));
+                contentEdt.setText(loadMemoData.get("content"));
+
             }
         });
 
@@ -49,7 +68,7 @@ public class MemoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 contentEdt.setText("");
-                mTxtManager.delete();
+//                mTxtManager.delete();
             }
         });
 
@@ -62,7 +81,9 @@ public class MemoActivity extends BaseActivity {
 
     @Override
     public void bindViews() {
+
         this.contentEdt = (EditText) findViewById(R.id.contentEdt);
+        this.titleEdt = (EditText) findViewById(R.id.titleEdt);
         this.deleteBtn = (Button) findViewById(R.id.deleteBtn);
         this.saveBtn = (Button) findViewById(R.id.saveBtn);
         this.loadBtn = (Button) findViewById(R.id.loadBtn);
