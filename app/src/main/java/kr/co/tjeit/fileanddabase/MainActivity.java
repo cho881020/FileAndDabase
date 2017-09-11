@@ -1,8 +1,12 @@
 package kr.co.tjeit.fileanddabase;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import kr.co.tjeit.fileanddabase.util.TextFileManager;
 
 public class MainActivity extends BaseActivity {
 
@@ -10,6 +14,8 @@ public class MainActivity extends BaseActivity {
     private android.widget.Button saveBtn;
     private android.widget.Button deleteBtn;
     private android.widget.EditText contentEdt;
+
+    TextFileManager mTextFileManager = new TextFileManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +28,37 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void setupEvents() {
+        loadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String memoContent = mTextFileManager.load();
+                contentEdt.setText(memoContent);
 
+                Toast.makeText(mContext, "파일 불러오기 완료.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTextFileManager.saveMemo(contentEdt.getText().toString());
+
+                contentEdt.setText("");
+
+                Toast.makeText(mContext, "메모 저장 완료", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTextFileManager.delete();
+                contentEdt.setText("");
+
+                Toast.makeText(mContext, "파일 삭제 완료.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
